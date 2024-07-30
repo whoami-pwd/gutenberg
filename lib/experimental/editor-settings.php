@@ -32,17 +32,23 @@ function gutenberg_enable_experiments() {
 		wp_add_inline_script( 'wp-block-editor', 'window.__experimentalEnableZoomedOutPatternsTab = true', 'before' );
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ba3878cc51 (Refactor blocks for core loading.)
 	if ( $gutenberg_experiments && array_key_exists( 'gutenberg-quick-edit-dataviews', $gutenberg_experiments ) ) {
 		wp_add_inline_script( 'wp-block-editor', 'window.__experimentalQuickEditDataViews = true', 'before' );
 	}
 	if ( $gutenberg_experiments && array_key_exists( 'gutenberg-block-bindings-ui', $gutenberg_experiments ) ) {
 		wp_add_inline_script( 'wp-block-editor', 'window.__experimentalBlockBindingsUI = true', 'before' );
 	}
+<<<<<<< HEAD
 	if ( $gutenberg_experiments && array_key_exists( 'gutenberg-media-processing', $gutenberg_experiments ) ) {
 		wp_add_inline_script( 'wp-block-editor', 'window.__experimentalMediaProcessing = true', 'before' );
 	}
 =======
 >>>>>>> 74a4a3fc26 (Add initial accordion implementation.)
+=======
+>>>>>>> ba3878cc51 (Refactor blocks for core loading.)
 }
 
 add_action( 'admin_init', 'gutenberg_enable_experiments' );
