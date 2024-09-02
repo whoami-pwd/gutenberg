@@ -206,7 +206,7 @@ function block_core_image_render_lightbox( $block_content, $block ) {
 	);
 
 	$state      = wp_interactivity_state( 'core/gallery' );
-	$gallery_id = $state['galleryId'];
+	$gallery_id = gutenberg_interactive_block_gallery_id( );
 	if ( isset( $gallery_id ) ) {
 		$images = $state['images'][ $gallery_id ];
 		if ( ! isset( $images ) ) {
