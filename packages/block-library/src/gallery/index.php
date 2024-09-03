@@ -40,47 +40,32 @@ add_filter( 'render_block_data', 'block_core_gallery_data_id_backcompatibility' 
  * @since 6.7.0
  *
  * @param string $block_content Rendered block content.
- * @param array  $block         Block object.
  *
  * @return string Filtered block content.
  */
-function block_core_gallery_interactivity_state( $block_content, $block ) {
-	if ( 'core/gallery' !== $block['blockName'] ) {
+function block_core_gallery_interactivity_state( $block_content ) {
+	if ( 'core/gallery' !== $block_content['blockName'] ) {
 		return $block_content;
 	}
 
 	$unique_gallery_id = uniqid();
-	interactive_block_gallery_id( $unique_gallery_id );
+	$filter_block_context = static function ( $context ) use ( $unique_gallery_id ) {
+		$context['galleryId']   = $unique_gallery_id;
+		return $context;
+	};
+	add_filter( 'render_block_context', $filter_block_context, 1 );
 
 	wp_interactivity_state(
 		'core/gallery',
 		array(
 			'images'    => array(),
-			'galleryId' => $unique_gallery_id,
 		)
 	);
 
 	return $block_content;
 }
 
-add_filter( 'render_block_data', 'block_core_gallery_interactivity_state', 15, 2 );
-
-/**
- * Returns the current gallery block id.
- * Used in image block to get the gallery id and render the lightbox.
- *
- * @since 6.7.0
- *
- * @param string $id The id of the gallery block.
- * @return array|void Returns the current gallery block id.
- */
-function interactive_block_gallery_id( $id = null ) {
-    static $gallery_id = 0;
-    if ( isset( $id ) ) {
-        $gallery_id = $id;
-    }
-    return $gallery_id;
-}
+add_filter( 'render_block_data', 'block_core_gallery_interactivity_state' );
 
 /**
  * Renders the `core/gallery` block on the server.
@@ -91,7 +76,7 @@ function interactive_block_gallery_id( $id = null ) {
  * @param string $content Content of the block being rendered.
  * @return string The content of the block being rendered.
  */
-function block_core_gallery_render( $attributes, $content ) {
+function block_core_gallery_render( $attributes, $content, $block ) {
 	// Adds a style tag for the --wp--style--unstable-gallery-gap var.
 	// The Gallery block needs to recalculate Image block width based on
 	// the current gap setting in order to maintain the number of flex columns
@@ -169,8 +154,7 @@ function block_core_gallery_render( $attributes, $content ) {
 		)
 	);
 
-	$state      = wp_interactivity_state( 'core/gallery' );
-	$gallery_id = interactive_block_gallery_id( );
+	$gallery_id = $block->context['galleryId'];
 
 	$processed_content->set_attribute( 'data-wp-interactive', 'core/gallery' );
 	$processed_content->set_attribute(
@@ -184,7 +168,7 @@ function block_core_gallery_render( $attributes, $content ) {
 		)
 	);
 
-	add_filter( 'render_block_core/gallery', 'block_core_gallery_render_lightbox' );
+	add_filter( 'render_block_core/gallery', 'block_core_gallery_render_lightbox', 15, 3 );
 
 	// The WP_HTML_Tag_Processor class calls get_updated_html() internally
 	// when the instance is treated as a string, but here we explicitly
@@ -245,9 +229,9 @@ function block_core_gallery_render( $attributes, $content ) {
  *
  * @return string Filtered block content.
  */
-function block_core_gallery_render_lightbox( $block_content ) {
+function block_core_gallery_render_lightbox( $block_content, $content, $block ) {
 	$state        = wp_interactivity_state( 'core/gallery' );
-	$gallery_id   = interactive_block_gallery_id();
+	$gallery_id   = $block->context['galleryId'];
 	$images       = $state['images'][ $gallery_id ] ?? array();
 	$translations = array();
 
@@ -279,9 +263,6 @@ function block_core_gallery_render_lightbox( $block_content ) {
 			);
 		}
 	}
-
-	// reset galleryId
-	interactive_block_gallery_id( 0 );
 
 	return $block_content;
 }

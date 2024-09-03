@@ -92,7 +92,7 @@ function render_block_core_image( $attributes, $content, $block ) {
 		 * if the way the blocks are rendered changes, or if a new kind of filter is
 		 * introduced.
 		 */
-		add_filter( 'render_block_core/image', 'block_core_image_render_lightbox', 15, 2 );
+		add_filter( 'render_block_core/image', 'block_core_image_render_lightbox', 15, 3 );
 	} else {
 		/*
 		 * Remove the filter if previously added by other Image blocks.
@@ -142,12 +142,13 @@ function block_core_image_get_lightbox_settings( $block ) {
  *
  * @since 6.4.0
  *
- * @param string $block_content Rendered block content.
- * @param array  $block         Block object.
+ * @param string $block_content  Rendered block content.
+ * @param array  $block          Block object.
+ * @param array  $block_instance Block instance.
  *
  * @return string Filtered block content.
  */
-function block_core_image_render_lightbox( $block_content, $block ) {
+function block_core_image_render_lightbox( $block_content, $block, $block_instance ) {
 	/*
 	 * If there's no IMG tag in the block then return the given block content
 	 * as-is. There's nothing that this code can knowingly modify to add the
@@ -205,9 +206,10 @@ function block_core_image_render_lightbox( $block_content, $block ) {
 		)
 	);
 
-	$state      = wp_interactivity_state( 'core/gallery' );
-	$gallery_id = gutenberg_interactive_block_gallery_id( );
+	$gallery_id = $block_instance->context['galleryId'] ?? null;
+
 	if ( isset( $gallery_id ) ) {
+		$state  = wp_interactivity_state( 'core/gallery' );
 		$images = $state['images'][ $gallery_id ];
 		if ( ! isset( $images ) ) {
 			$images = array();

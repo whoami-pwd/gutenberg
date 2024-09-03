@@ -9,6 +9,9 @@
 	"keywords": [ "images", "photos" ],
 	"textdomain": "default",
 	"attributes": {
+		"galleryId": {
+			"type": "number"
+		},
 		"images": {
 			"type": "array",
 			"default": [],
@@ -105,6 +108,7 @@
 		}
 	},
 	"providesContext": {
+		"galleryId": "galleryId",
 		"allowResize": "allowResize",
 		"imageCrop": "imageCrop",
 		"fixedHeight": "fixedHeight"
