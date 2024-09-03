@@ -1578,16 +1578,20 @@ const canInsertBlockTypeUnmemoized = (
 		return false;
 	}
 
-	const isLocked = !! getTemplateLock( state, rootClientId );
-	if ( isLocked ) {
+	const parentBlockListSettings = getBlockListSettings( state, rootClientId );
+	const templateLock = getTemplateLock( state, rootClientId );
+	const allowsContentOnlyInsertion =
+		templateLock === 'contentOnly' &&
+		!! parentBlockListSettings?.contentOnlyInsertion;
+
+	const isLocked = !! templateLock;
+	if ( isLocked && ! allowsContentOnlyInsertion ) {
 		return false;
 	}
 
 	if ( getBlockEditingMode( state, rootClientId ?? '' ) === 'disabled' ) {
 		return false;
 	}
-
-	const parentBlockListSettings = getBlockListSettings( state, rootClientId );
 
 	// The parent block doesn't have settings indicating it doesn't support
 	// inner blocks, return false.
