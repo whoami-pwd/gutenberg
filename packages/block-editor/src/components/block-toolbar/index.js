@@ -65,7 +65,7 @@ export function PrivateBlockToolbar( {
 		shouldShowVisualToolbar,
 		showParentSelector,
 		isUsingBindings,
-		selectedHasTemplateLock,
+		hasContentOnlyLocking,
 	} = useSelect( ( select ) => {
 		const {
 			getBlockName,
@@ -119,7 +119,7 @@ export function PrivateBlockToolbar( {
 				selectedBlockClientIds.length === 1 &&
 				_isDefaultEditingMode,
 			isUsingBindings: _isUsingBindings,
-			selectedHasTemplateLock: _hasTemplateLock,
+			hasContentOnlyLocking: _hasTemplateLock,
 		};
 	}, [] );
 
@@ -202,7 +202,7 @@ export function PrivateBlockToolbar( {
 							</ToolbarGroup>
 						</div>
 					) }
-				{ ! selectedHasTemplateLock &&
+				{ ! hasContentOnlyLocking &&
 					shouldShowVisualToolbar &&
 					isMultiToolbar && <BlockGroupToolbar /> }
 				{ shouldShowVisualToolbar && (
