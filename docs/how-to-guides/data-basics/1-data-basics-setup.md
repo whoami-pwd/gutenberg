@@ -142,7 +142,8 @@ function load_custom_wp_admin_scripts( $hook ) {
 		'my-first-gutenberg-app',
 		plugins_url( 'build/index.js', __FILE__ ),
 		$asset_file['dependencies'],
-		$asset_file['version']
+		$asset_file['version'],
+		true
 	);
 	wp_enqueue_script( 'my-first-gutenberg-app' );
 
