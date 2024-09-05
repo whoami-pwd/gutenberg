@@ -28,6 +28,7 @@ import PostsPerPage from '../posts-per-page';
 import SiteDiscussion from '../site-discussion';
 import { store as editorStore } from '../../store';
 import { PrivatePostLastRevision } from '../post-last-revision';
+import PostTrash from '../post-trash';
 
 /**
  * Module Constants
@@ -86,6 +87,7 @@ export default function PostSummary( { onActionPerformed } ) {
 										<PostsPerPage />
 										<SiteDiscussion />
 										<PostFormatPanel />
+										<PostTrash />
 									</VStack>
 									{ fills }
 								</VStack>
